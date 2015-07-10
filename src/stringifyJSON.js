@@ -4,73 +4,67 @@
 // but you don't so you're going to write it from scratch:
 
 var stringifyJSON = function(obj) {
-  // your code goes here
-  	//determine what the parameter is
-  	var type = typeof(obj);
-  	var finalStr = '';
+   var finalStr = '';	
 
-  	//base case
-  	//returns final str
+   	if (obj == null){
+   		return 'null'
+   	}
 
-  	//recursive case
-  	//makes whatever a string, probably cannot use .toString()
-  	
-  
-  	
- 
-  	
-  	//simple single cases first
-  	
-  	if (type == 'number'){
-  		finalStr+= obj;
-  	};
-  	
-  	if (type == 'string'){ 
-  		finalStr+= "\"" + obj + "\""};
-  	
-  	if (type == 'boolean'){
-  		finalStr += obj};
-  		
-  	//if (type == 'symbol'){
-  		//do nothing
-  	//};
-  	
-  	//if (type == 'undefined'){
-  		//do nothing
-  	//};
-  	
-  	// more complicated case
-  	if (type == 'object'){
-  		type = (Array.isArray(obj) ? 'array' : 'object')
-  	} 
-  	
-  	if (type == 'array'){
-  	//add in the array brackets
-  	finalStr += "[";
-  	//iterate through the array
-  		for(var i=0; i<obj.length; i++){
-  			//call the method on each element of the array
-  			finalStr += stringifyJSON(obj[i]);	
-  		}
-  	// add in the array bracket end
-  		finalStr += "]"
-  	};
-  	
-  	if (type == 'object'){
-  	// add in objects opening curly bracket
-  	finalStr+= "{"
-  		for(var key in object){
-  			//run JSON stringify on key
-  			finalStr+=stringifyJSON(key)
-  			finalStr+= ":"
-  			finalStr+=stringifyJSON(object[key])
-  			finalStr+=","
-  		}
-  			finalStr.slice(0, finalStr.length -1)
-  			finalStr+="}"
-  	};
+    if(typeof(obj) == 'object'){
+        if(Array.isArray(obj)){
+          var type = 'array'
+        }
+        else{
+          var type = 'object'
+        }
+    }
 
-  	//return str at end of process
+    if(type == 'array'){
+    	finalStr = '['
+    	for(var i =0; i<obj.length; i++){	
 
-  	return finalStr;
+    		if(typeof(obj[i])=='object' || typeof(obj[i]) == 'string'){
+    			finalStr+=(stringifyJSON(obj[i]))
+    		}
+
+    		else{
+    			finalStr+=(obj[i]);
+    		}
+    			finalStr+=','
+		}
+
+		finalStr = finalStr.slice(0, finalStr.length-1)
+		return finalStr+ ']'
+	}
+
+	if (type == 'object'){
+		if(Object.keys(obj).length==0){
+			finalStr=null
+		}
+		
+		else{
+			finalStr = "{"
+
+			for(var key in obj){
+
+				if (typeof(obj[key]) == 'object'){
+					finalStr+=(stringifyJSON(obj[key]))
+				}
+
+				else{
+					finalStr+= (key+ ":" + obj[key] + ", ");
+				}
+			}
+			return finalStr+="}"
+		}
+	}
+
+	else{
+		if (typeof(obj) == 'string'){
+			return finalStr+= '\"' + obj +'\"'
+		}
+		else{
+			return finalStr+= obj
+		}
+	}
 };
