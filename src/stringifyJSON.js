@@ -7,7 +7,11 @@ var stringifyJSON = function(obj) {
    var finalStr = '';	
 
    	if (obj == null){
-   		return 'null'
+   		return finalStr = 'null'
+   	}
+   	
+   	if (obj == undefined){
+   		return finalStr
    	}
 
     if(typeof(obj) == 'object'){
@@ -20,43 +24,49 @@ var stringifyJSON = function(obj) {
     }
 
     if(type == 'array'){
-    	finalStr = '['
+    	finalStr = []
     	for(var i =0; i<obj.length; i++){	
 
-    		if(typeof(obj[i])=='object' || typeof(obj[i]) == 'string'){
-    			finalStr+=(stringifyJSON(obj[i]))
-    		}
+    		//if(typeof(obj[i])=='object' || typeof(obj[i]) == 'string'){
+    			finalStr.push(stringifyJSON(obj[i]))
+    			//finalStr+=(stringifyJSON(obj[i]))
+    		//}
 
-    		else{
-    			finalStr+=(obj[i]);
-    		}
-    			finalStr+=','
+    		//else{
+    		//	finalStr.push(obj[i])
+    			//finalStr+=(obj[i]);
+    	//	}
+    			//finalStr+=','
 		}
 
-		finalStr = finalStr.slice(0, finalStr.length-1)
-		return finalStr+ ']'
+		//finalStr = finalStr.slice(0, finalStr.length-1)
+		return "[" + finalStr.join(',') + ']'
 	}
 
 	if (type == 'object'){
-		if(Object.keys(obj).length==0){
-			finalStr=null
-		}
+		//if(Object.keys(obj).length==0){
+		 //return 'null'
+		//}
 		
-		else{
+		//else{
 			finalStr = "{"
 
 			for(var key in obj){
 
-				if (typeof(obj[key]) == 'object'){
-					finalStr+=(stringifyJSON(obj[key]))
+				if (typeof(obj[key])=='function' || key=="undefined" || key==null){
+					finalStr
 				}
 
 				else{
-					finalStr+= (key+ ":" + obj[key] + ", ");
+					finalStr+= stringifyJSON(key)+ ":"  + stringifyJSON(obj[key]) + ",";
 				}
 			}
+
+				if(finalStr[finalStr.length-1]===','){
+					finalStr = finalStr.slice(0, finalStr.length-1)
+				}
 			return finalStr+="}"
-		}
+		//}
 	}
 
 	else{
